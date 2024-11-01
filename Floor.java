@@ -9,34 +9,32 @@ public class Floor {
     private int floorNumber;
     private Map<String, List<VehicleSpace>> vehicleSpaces;
 
-    public Floor(int floorNumber, int capacity) {
+    public Floor(int floorNumber, Map<String, Integer> vehicleSpaceMap) {
         this.floorNumber = floorNumber;
         vehicleSpaces = new HashMap<>();
-        vehicleSpaces.put("Bike", new ArrayList<>());
-        vehicleSpaces.put("Car", new ArrayList<>());
-        vehicleSpaces.put("Jeep", new ArrayList<>());
-        vehicleSpaces.put("Bus", new ArrayList<>());
-        vehicleSpaces.put("Truck", new ArrayList<>());
 
-        for (int i = 0; i < capacity; i++) {
-            vehicleSpaces.get("Bike").add(new VehicleSpace(i));
-            vehicleSpaces.get("Car").add(new VehicleSpace(i));
-            vehicleSpaces.get("Jeep").add(new VehicleSpace(i));
-            vehicleSpaces.get("Bus").add(new VehicleSpace(i));
-            vehicleSpaces.get("Truck").add(new VehicleSpace(i));
-
+        // Initialize vehicle spaces based on vehicle type
+        for (String vehicleType : vehicleSpaceMap.keySet()) {
+            List<VehicleSpace> spaces = new ArrayList<>();
+            int capacity = vehicleSpaceMap.get(vehicleType);
+            for (int i = 0; i < capacity; i++) {
+                spaces.add(new VehicleSpace(i + 1)); // Space numbers are 1-based
+            }
+            vehicleSpaces.put(vehicleType, spaces);
         }
     }
 
     public boolean parkVehicle(Vehicle vehicle) {
         List<VehicleSpace> spaces = vehicleSpaces.get(vehicle.getVehicleType());
-        for (VehicleSpace space : spaces) {
-            if (space.isAvailable()) {
-                space.parkVehicle(vehicle);
-                return true;
+        if (spaces != null) {
+            for (VehicleSpace space : spaces) {
+                if (space.isAvailable()) {
+                    space.parkVehicle(vehicle);
+                    return true;
+                }
             }
         }
-        return false;
+        return false; // No space available
     }
 
     public Vehicle removeVehicle(String registrationNumber) {
@@ -47,22 +45,7 @@ public class Floor {
                 }
             }
         }
-        return null;
-    }
-
-    public int checkAvailability(String vehicleType) {
-        List<VehicleSpace> spaces = vehicleSpaces.get(vehicleType);
-        int count = 0;
-        for (VehicleSpace space : spaces) {
-            if (space.isAvailable()) {
-                count++;
-            }
-        }
-        return count;
-    }
-
-    public int getFloorNumber() {
-        return floorNumber;
+        return null; // Vehicle not found
     }
 
     public Map<String, Integer> getStatus() {
@@ -77,5 +60,13 @@ public class Floor {
             status.put(type, occupied);
         }
         return status;
+    }
+
+    public int getFloorNumber() {
+        return floorNumber;
+    }
+    public int getTotalSpacesForType(String vehicleType) {
+        List<VehicleSpace> spaces = vehicleSpaces.get(vehicleType);
+        return (spaces != null) ? spaces.size() : 0;
     }
 }

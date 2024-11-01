@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CostStrategy {
+//    private
     private Map<String, Integer> costPerHour;
 
     public CostStrategy() {
