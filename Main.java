@@ -6,40 +6,72 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ParkingLot parkingLot = new ParkingLot(2, 2); // 2 Floors, 2 spaces each
+        System.out.println("Enter Number of Floor=");
+        int floor = scanner.nextInt();
+        System.out.println("Enter Space Per Floor=");
+        int spacePerFloor = scanner.nextInt();
+        ParkingLot parkingLot = new ParkingLot(floor, spacePerFloor);
+        boolean flag = true;
+        do {
+            System.out.println("1. Add Vehicle");
+            System.out.println("2. Remove Vehicle");
+            System.out.println("3. Check Vehicle available or not");
+            System.out.println("4. Display The Current Status");
+            System.out.println("6. Exit");
+            System.out.println("Enter your choice");
+            int choice = scanner.nextInt();
+            if (choice == 6) {
+                flag = false;
+                scanner.close();
+            }
 
-        // Add Vehicles
-        Vehicle vehicle1 = new Vehicle("ABC123", "Red", "Car");
-        parkingLot.addVehicle(vehicle1);
 
-        Vehicle vehicle2 = new Vehicle("XYZ456", "Blue", "Car");
-        parkingLot.addVehicle(vehicle2);
+            switch (choice){
+                case 1 ->{
+                    System.out.println("Enter The Vehicle Registration Number");
+                    scanner.nextLine();
+                    String registrationNumber = scanner.next();
+                    System.out.println("Enter Colour of Vehicle");
+                    scanner.nextLine();
+                    String colour = scanner.next();
+                    System.out.println("Enter Vehicle Type");
+                    scanner.nextLine();
+                    String vehicleType = scanner.next();
+                    String result = parkingLot.addVehicle(new Vehicle(registrationNumber,colour,vehicleType));
+                    System.out.println(result);
+                }
+                case 2 ->{
+                    System.out.println("Enter Token Id");
+                    scanner.nextLine();
+                    String tokenId = scanner.next();
+                    LocalDateTime exitTime = LocalDateTime.now();
+                    Vehicle vehicle = parkingLot.isVehicleAvailable(tokenId);
+                    if (vehicle !=null) {
+                        int parkingFee = parkingLot.calculateParkingFee(tokenId, exitTime);
+                        Vehicle removedVehicle = parkingLot.removeVehicle(vehicle);
+                        System.out.println("Removed vehicle: " + removedVehicle.getRegistrationNumber());
+                        System.out.println("Total Parking Fee: ₹" + parkingFee);
+                    } else {
+                        System.out.println("Vehicle not found.");
+                    }
+                }
+                case 3 ->{
+                    System.out.println("Enter Token Id");
+                    scanner.nextLine();
+                    String tokenId = scanner.next();
+                    Vehicle vehicle = parkingLot.isVehicleAvailable(tokenId);
+                    if(vehicle!=null){
+                        System.out.println("Vehicle is Present in the Parking Lot");
+                    }else{
+                        System.out.println("Vehicle is Not Present in the Parking Lot");
+                    }
+                }
+                case 4 -> parkingLot.displayStatus();
+                default -> System.out.println("Please choose Valid Option");
+            }
 
-        // Try to add another vehicle
-        boolean added = parkingLot.addVehicle(new Vehicle("LMN789", "Green", "Car"));
-        if (!added) {
-            System.out.println("Parking lot is full for Cars.");
-        }
-
-        // Display Status
-        parkingLot.displayStatus();
-
-        // Remove Vehicle
-        String tokenToRemove = vehicle1.getTokenId();
-        LocalDateTime exitTime = LocalDateTime.now();
-        boolean isVehicleAvailable = parkingLot.isVehicleAvailable(tokenToRemove);
-        if (isVehicleAvailable) {
-            int parkingFee = parkingLot.calculateParkingFee(tokenToRemove, exitTime);
-            Vehicle removedVehicle = parkingLot.removeVehicle(vehicle1);
-            System.out.println("Removed vehicle: " + removedVehicle.getRegistrationNumber());
-            System.out.println("Total Parking Fee: ₹" + parkingFee);
-        } else {
-            System.out.println("Vehicle not found.");
-        }
-
-        // Display Status after removal
-        parkingLot.displayStatus();
-
+        } while (flag);
         scanner.close();
+        System.exit(0);
     }
 }
