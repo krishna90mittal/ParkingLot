@@ -1,5 +1,6 @@
 package com.parkingsystem;
 
+import javax.xml.transform.Source;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -66,15 +67,13 @@ public class Main {
                     }
                 }
                 case 3 -> {
-                    System.out.println("Enter Token Id");
+                    System.out.println("Enter Floor Number");
+                    int floorNumber = scanner.nextInt();
+                    System.out.println("Enter vehicle Type=");
                     scanner.nextLine();
-                    String tokenId = scanner.next();
-                    Vehicle vehicle = parkingLot.isVehicleAvailable(tokenId);
-                    if (vehicle != null) {
-                        System.out.println("Vehicle is Present in the Parking Lot");
-                    } else {
-                        System.out.println("Vehicle is Not Present in the Parking Lot");
-                    }
+                    String vehicleType = scanner.next();
+                    parkingLot.checkAvailability(floorNumber,vehicleType);
+                    
                 }
                 case 4 -> parkingLot.displayStatus();
                 default -> System.out.println("Please choose Valid Option");

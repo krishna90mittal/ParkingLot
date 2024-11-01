@@ -69,4 +69,16 @@ public class Floor {
         List<VehicleSpace> spaces = vehicleSpaces.get(vehicleType);
         return (spaces != null) ? spaces.size() : 0;
     }
+    public int getOccupiedSpaces(String vehicleType) {
+        int occupied = 0;
+        List<VehicleSpace> spaces = vehicleSpaces.get(vehicleType);
+        if (spaces != null) {
+            for (VehicleSpace space : spaces) {
+                if (!space.isAvailable()) {
+                    occupied++;
+                }
+            }
+        }
+        return occupied;
+    }
 }

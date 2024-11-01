@@ -76,4 +76,17 @@ public class ParkingLot {
             }
         }
     }
+    public void checkAvailability(int floorNumber, String vehicleType) {
+        if (floorNumber > 0 && floorNumber <= floors.size()) {
+            Floor floor = floors.get(floorNumber - 1); // Adjust for 0-based index
+            int totalSpaces = floor.getTotalSpacesForType(vehicleType);
+            int occupiedSpaces = floor.getOccupiedSpaces(vehicleType);
+            int availableSpaces = totalSpaces - occupiedSpaces;
+            System.out.println("Floor " + floorNumber + " | Vehicle Type: " + vehicleType +
+                    " | Total: " + totalSpaces + " | Occupied: " + occupiedSpaces +
+                    " | Available: " + availableSpaces);
+        } else {
+            System.out.println("Invalid floor number.");
+        }
+    }
 }
